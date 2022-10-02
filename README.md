@@ -3,6 +3,12 @@
 
 _The Best Video Player, Ever_
 
+## Introduction
+
+## Documentation
+
+## Contribution
+
 ## License
 
 Mozilla Public License, v2.0

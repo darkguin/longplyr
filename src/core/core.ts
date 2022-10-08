@@ -65,6 +65,7 @@ interface Player {
   on<E extends keyof EventMap>(event: E, listener: (ev: EventMap[E]) => any): this;
   once<E extends keyof EventMap>(event: E, listener: (ev: EventMap[E]) => any): this;
   off<E extends keyof EventMap>(event: E, listener: (ev: EventMap[E]) => any): this;
+  togglePlay(): void;
 }
 
 export function usePlayerExtend(prototypes: { [key: string]: any }) {

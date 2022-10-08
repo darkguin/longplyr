@@ -30,6 +30,7 @@ const onPlayerClick = () => {
     <video
       :id="player && player.id"
       :src="src"
+      v-bind="$attrs"
       class="lpr__video"
       ref="mediaRef"
       @click="onPlayerClick"

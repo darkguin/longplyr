@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import path from "path";
 import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
@@ -7,7 +8,12 @@ export default defineConfig({
     lib: {
       entry: "src/main.ts",
       name: "LongPlyrLib",
-      fileName: (format) => `longplyr-lib.${format}.js`,
+      fileName: (format) => `longplyr.${format}.js`,
+    },
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
   },
 });

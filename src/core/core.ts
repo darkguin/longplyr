@@ -1,6 +1,6 @@
 import { PlayerModuleFunc } from "@/core/models";
 import { EventMap, EventEmitter } from "@/modules/events-emmiter/events-emitter";
-import { v4 as uuid } from "uuid";
+import { nanoid } from "nanoid";
 
 class Player {
   private static modules_: PlayerModuleFunc[] = [];
@@ -30,7 +30,7 @@ class Player {
   }
 
   constructor(mediaEl: HTMLMediaElement, containerEl: HTMLDivElement) {
-    this.id = `player-${uuid()}`;
+    this.id = `player-${nanoid(10)}`;
     this.$el = mediaEl;
     this.$containerEl = containerEl;
 

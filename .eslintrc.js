@@ -4,6 +4,7 @@ module.exports = {
   parserOptions: {
     parser: "@typescript-eslint/parser",
   },
+
   extends: [
     "plugin:vue/strongly-recommended",
     "eslint:recommended",
@@ -13,6 +14,7 @@ module.exports = {
   plugins: ["@typescript-eslint", "prettier"],
   rules: {
     "prettier/prettier": "error",
+    "vue/multi-word-component-names": ["error", { ignores: ["Poster.ce"] }],
   },
   env: {
     browser: true,

@@ -13,13 +13,13 @@
     "skipLibCheck": true,
     "noEmit": true,
     "baseUrl": "./",
+    "declaration": true,
+    "outDir": "dist",
     "paths": {
       "@/*": ["src/*"],
-      "@core/*": ["src/core/*"],
-      "@modules/*": ["src/modules/*"],
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
 }
 

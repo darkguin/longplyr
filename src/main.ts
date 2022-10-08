@@ -1,7 +1,7 @@
 import { defineCustomElement } from "vue";
-import VideoPlayer from "./core/VideoPlayer.ce.vue";
-import Poster from "./components/Poster.ce.vue";
-import TimeLine from "./components/TimeLine.ce.vue";
+import VideoPlayer from "./components/VideoPlayer.vue";
+import Poster from "./components/Poster.vue";
+import TimeLine from "./components/TimeLine.vue";
 
 const VideoPlayerElement = defineCustomElement(VideoPlayer);
 const PosterElement = defineCustomElement(Poster);

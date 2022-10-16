@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "es2015",
     "useDefineForClassFields": true,
-    "module": "ESNext",
+    "module": "es2015",
     "moduleResolution": "Node",
     "strict": true,
     "jsx": "preserve",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": ["es2015", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
     "baseUrl": "./",

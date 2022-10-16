@@ -6,14 +6,13 @@ import { Events } from "@/core/values";
 const props = withDefaults(defineProps<{ src: string }>(), { src: "" });
 const emits = defineEmits([Events.Created]);
 
+const player = ref<Player>();
 const mediaRef = ref<HTMLVideoElement>();
 const containerRef = ref<HTMLDivElement>();
-const player = ref<Player>();
 
 onMounted(() => {
   if (!mediaRef.value || !containerRef.value) return;
 
-  console.log();
   player.value = new Player(mediaRef.value, containerRef.value);
   provide("player", player.value);
   emits(Events.Created, player.value);
@@ -26,7 +25,7 @@ const onPlayerClick = () => {
 </script>
 
 <template>
-  <div class="lpr">
+  <div class="lpr" ref="containerRef" :class="{ 'lpr--fullscreen': player?.isFullscreen }">
     <video
       :id="player && player.id"
       :src="src"
@@ -36,7 +35,7 @@ const onPlayerClick = () => {
       @click="onPlayerClick"
     ></video>
 
-    <div class="lpr__container" ref="containerRef">
+    <div class="lpr__container">
       <slot />
     </div>
   </div>
@@ -55,9 +54,14 @@ const onPlayerClick = () => {
   border: 0 solid transparent;
   border-radius: var(--lpr-player-border-radius);
 
+  &.lpr--fullscreen {
+    border-radius: 0;
+  }
+
   &__video {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 
   &__container {
@@ -67,6 +71,18 @@ const onPlayerClick = () => {
     width: 100%;
     height: 100%;
     pointer-events: none;
+  }
+
+  video::-webkit-media-controls-overlay-enclosure {
+    display: none !important;
+  }
+
+  video::-webkit-media-controls-enclosure {
+    display: none !important;
+  }
+
+  video::-webkit-media-controls {
+    display: none !important;
   }
 }
 </style>

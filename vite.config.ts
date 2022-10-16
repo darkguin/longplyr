@@ -14,4 +14,7 @@ export default defineConfig({
   resolve: {
     alias: [{ find: "@", replacement: path.resolve(__dirname, "/src") }],
   },
+  define: {
+    "process.env.NODE_ENV": '"production"',
+  },
 });

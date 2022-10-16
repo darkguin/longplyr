@@ -5,4 +5,15 @@ export enum Events {
   Play = "play",
   Pause = "pause",
   Playing = "playing",
+  DurationChange = "durationchange",
+  VolumeChange = "volumechange",
+  FullscreenChange = "fullscreenchange",
+  MozFullscreenChange = "mozfullscreenchange",
+  WebKitFullscreenChange = "webkitfullscreenchange",
 }
+
+export const FullscreenChangeEvents = [
+  Events.FullscreenChange,
+  Events.MozFullscreenChange,
+  Events.WebKitFullscreenChange,
+];

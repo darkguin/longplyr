@@ -1,35 +1,11 @@
 import { PlayerModuleFunc } from "@/core/models";
-import { EventMap, EventEmitter } from "@/modules/events-emmiter/events-emitter";
+import { EventEmitter } from "@/modules/events-emmiter";
+import { FullscreenMode } from "@/modules/fullscreen-mode/fullscreen";
 import { nanoid } from "nanoid";
+import { Reactivity } from "@/modules/reactivity";
 
 class Player {
-  private static modules_: PlayerModuleFunc[] = [];
-
-  readonly id: string;
-  readonly $el: HTMLMediaElement;
-  readonly $containerEl: HTMLDivElement;
-
-  get currentTime(): number {
-    return this.$el.currentTime;
-  }
-
-  set currentTime(value: number) {
-    this.$el.currentTime = value;
-  }
-
-  get duration(): number {
-    return this.$el.duration;
-  }
-
-  get played(): TimeRanges {
-    return this.$el.played;
-  }
-
-  get paused(): boolean {
-    return this.$el.paused;
-  }
-
-  constructor(mediaEl: HTMLMediaElement, containerEl: HTMLDivElement) {
+  constructor(mediaEl: HTMLMediaElement, containerEl: HTMLElement) {
     this.id = `player-${nanoid(10)}`;
     this.$el = mediaEl;
     this.$containerEl = containerEl;
@@ -37,17 +13,10 @@ class Player {
     Player.modules_.forEach((moduleFunc) => moduleFunc(this));
   }
 
-  play(): Promise<void> {
-    return this.$el.play();
-  }
-
-  pause() {
-    this.$el.pause();
-  }
-
-  togglePlay() {
-    this.paused ? this.play() : this.pause();
-  }
+  private static modules_: PlayerModuleFunc[] = [];
+  readonly id: string;
+  readonly $el: HTMLMediaElement;
+  readonly $containerEl: HTMLElement;
 
   static installModule(moduleFunc: PlayerModuleFunc) {
     if (!!moduleFunc && Player.modules_.indexOf(moduleFunc) < 0) {
@@ -59,21 +28,18 @@ class Player {
     modules.forEach((m) => Player.installModule(m));
     return Player;
   }
+
+  togglePlay() {
+    this.$el.paused || this.$el.ended ? this.$el.play() : this.$el.pause();
+  }
 }
 
-interface Player {
-  on<E extends keyof EventMap>(event: E, listener: (ev: EventMap[E]) => any): this;
-  once<E extends keyof EventMap>(event: E, listener: (ev: EventMap[E]) => any): this;
-  off<E extends keyof EventMap>(event: E, listener: (ev: EventMap[E]) => any): this;
-  togglePlay(): void;
+type CoreModules = EventEmitter & FullscreenMode & Reactivity;
+
+interface Player extends CoreModules {
+  [key: string]: unknown;
 }
 
-export function usePlayerExtend(prototypes: { [key: string]: any }) {
-  Object.keys(prototypes).forEach((protoMethod: string) => {
-    (Player.prototype as any)[protoMethod] = prototypes[protoMethod];
-  });
-}
-
-Player.use([EventEmitter]);
+Player.use([EventEmitter, Reactivity, FullscreenMode]);
 
 export default Player;

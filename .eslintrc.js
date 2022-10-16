@@ -13,8 +13,10 @@ module.exports = {
   ],
   plugins: ["@typescript-eslint", "prettier"],
   rules: {
+    "@typescript-eslint/ban-ts-comment": "off",
     "prettier/prettier": "error",
-    "vue/multi-word-component-names": ["error", { ignores: ["Poster.ce"] }],
+    "vue/multi-word-component-names": ["error", { ignores: ["Poster", "Time"] }],
+    "multiline-ternary": "off",
   },
   env: {
     browser: true,

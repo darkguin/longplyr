@@ -7,7 +7,7 @@
     "build": "vue-cli-service build --target lib --dest dist/ --name longplyr src/main.ts",
     "lint": "vue-cli-service lint",
     "vite-dev": "vite",
-    "vite-build": "vue-tsc && vite build"
+    "vite-build": "vue-tsc && vite build --mode production"
   },
   "dependencies": {
     "@vueuse/core": "^9.3.0",

@@ -1,41 +1,28 @@
 <script lang="ts" setup>
-import { inject, onMounted, onUnmounted, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import { Player } from "@/core";
-import { Events } from "@/core/values";
+import { useReactivity } from "@/modules/reactivity";
+import { useResizeObserver } from "@vueuse/core";
 
-const player = inject("player") as Player;
-const progressRef = ref<HTMLDivElement>();
+const player = ref<Player>(inject("player") as Player);
 
-onMounted(() => {
-  if (!progressRef.value) return;
-  player.on(Events.TimeUpdate, onPlayerTimeUpdate);
-});
+const currentTime = useReactivity<number>(player, "currentTime");
+const duration = useReactivity<number>(player, "duration");
 
-onUnmounted(() => {
-  player.off(Events.TimeUpdate, onPlayerTimeUpdate);
-});
-
-const onPlayerTimeUpdate = () => {
-  if (!progressRef.value || !player) return;
-
-  const { currentTime, duration } = player;
-  const progress = (currentTime / duration) * 100;
-  progressRef.value.style.width = `${progress}%`;
-};
+const progress = computed(() => `${(currentTime.value / duration.value) * 100}%`);
 
 const onTimelineClick = (event: MouseEvent) => {
-  if (!player) return;
-
   const { clientX, target } = event;
   const { left, width } = (target as HTMLElement).getBoundingClientRect();
-  player.currentTime = player.duration * ((clientX - left) / width);
+  player.value.$el.currentTime = duration.value * ((clientX - left) / width);
 };
 </script>
 
 <template>
   <div class="lpr-timeline__container">
     <div class="lpr-timeline" @click="onTimelineClick" />
-    <div ref="progressRef" class="lpr-timeline__progress">
+
+    <div class="lpr-timeline__progress" :style="{ width: progress }">
       <div class="lpr-timeline__circle"></div>
     </div>
   </div>
@@ -49,9 +36,9 @@ const onTimelineClick = (event: MouseEvent) => {
   --timeline-height: 4px;
   --timeline-border-radius: 8px;
 
-  --timeline-padding-left: 32px;
-  --timeline-padding-right: 32px;
-  --timeline-padding-bottom: max(12%, 36px);
+  --timeline-padding-left: 20px;
+  --timeline-padding-right: 20px;
+  --timeline-padding-bottom: 60px;
 }
 
 .lpr-timeline {
@@ -83,6 +70,8 @@ const onTimelineClick = (event: MouseEvent) => {
   }
 
   &__progress {
+    overflow: visible;
+    resize: horizontal;
     pointer-events: none;
     width: 0;
     background-color: var(--timeline-progress-color);

@@ -1,3 +1,4 @@
-import { EventEmitter } from "@/modules/events-emmiter/events-emitter";
+import { EventEmitter } from "./events-emitter";
+import { Events, FullscreenChangeEvents } from "./types/events";
 
-export { EventEmitter };
+export { EventEmitter, Events, FullscreenChangeEvents };

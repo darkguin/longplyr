@@ -1,9 +1,9 @@
-import { Player, useModule } from "@/core";
-import { usePlayerExtend } from "@/core/utils/usePlayerExtend";
+import { usePlayerExtend } from "@/utils/usePlayerExtend";
+import { useModule } from "@/utils";
 
 export type EventMap = HTMLMediaElementEventMap;
 
-export const EventEmitter = useModule((player: Player) => {
+export const EventEmitter = useModule(({ player }) => {
   usePlayerExtend({
     on<E extends keyof EventMap>(event: E | E[], listener: (ev: EventMap[E]) => any) {
       if (!Array.isArray(event)) {

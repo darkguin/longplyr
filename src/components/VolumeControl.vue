@@ -1,28 +1,26 @@
 <script lang="ts" setup>
-import { computed, inject, ref } from "vue";
+import { computed, inject } from "vue";
 import { Player } from "@/core";
-import SoundOffIcon from "@/components/icons/SoundOffIcon.vue";
-import SoundIcon from "@/components/icons/SoundIcon.vue";
 import { useReactivity } from "@/modules/reactivity";
 
-const player = ref<Player>(inject("player") as Player);
-const isMuted = ref(player.value?.$el.muted);
-const volume = useReactivity<number>(player, "volume");
+import SoundOffIcon from "@/components/icons/SoundOffIcon.vue";
+import SoundIcon from "@/components/icons/SoundIcon.vue";
+
+const player = inject("player") as Player;
+const { volume, muted } = useReactivity(player);
 
 const progress = computed(() => `${volume.value * 100}%`);
 
 const onToggleMute = () => {
   if (!player) return;
-  player.value.$el.muted = !isMuted.value;
-  isMuted.value = !isMuted.value;
+  muted.value = !muted.value;
 };
 
 const onProgressClick = (event: MouseEvent) => {
   const { clientX, target } = event;
   const { left, width } = (target as HTMLElement).getBoundingClientRect();
-  player.value.$el.volume = (clientX - left) / width;
-
-  isMuted.value && onToggleMute();
+  volume.value = (clientX - left) / width;
+  muted.value && onToggleMute();
 };
 </script>
 
@@ -30,15 +28,15 @@ const onProgressClick = (event: MouseEvent) => {
   <div class="lpr-volume">
     <div class="lpr-volume__button" @click="onToggleMute">
       <Transition>
-        <SoundIcon v-if="!isMuted" class="lpr-volume__icon" width="26" height="26" color="#fff" />
-        <SoundOffIcon v-else class="lpr-volume__icon" width="28" height="28" color="#fff" />
+        <SoundIcon v-if="!muted" class="lpr-volume__icon" color="#fff" height="26" width="26" />
+        <SoundOffIcon v-else class="lpr-volume__icon" color="#fff" height="28" width="28" />
       </Transition>
     </div>
 
-    <div class="lpr-volume__level-container">
-      <div class="lpr-volume__level" @click="onProgressClick" />
+    <div class="lpr-volume__level-container" @click="onProgressClick">
+      <div class="lpr-volume__level" />
 
-      <div class="lpr-volume__level-progress" :style="{ width: progress }">
+      <div :style="{ width: progress }" class="lpr-volume__level-progress">
         <div class="lpr-volume__level-circle"></div>
       </div>
     </div>
@@ -47,92 +45,94 @@ const onProgressClick = (event: MouseEvent) => {
 
 <style lang="scss">
 :host {
+  --volume-border-radius: 8px;
   --volume-color: #787574;
+
+  grid-area: volume;
+  --volume-height: 4px;
   --volume-progress-color: #00b9ae;
 
   --volume-width: 80px;
-  --volume-height: 4px;
-  --volume-border-radius: 8px;
 }
 
 .lpr-volume {
-  position: relative;
-  display: flex;
   align-items: center;
-  width: fit-content;
+  display: flex;
   height: 32px;
-  gap: 10px;
+  position: relative;
+  width: fit-content;
 
   &__button,
   &__level-container {
-    display: flex;
     align-items: center;
-    pointer-events: all;
     cursor: pointer;
+    display: flex;
+    pointer-events: all;
   }
 
   &__button {
-    width: 32px;
     height: 100%;
+    width: 32px;
   }
 
   &__level-container {
+    height: 100%;
+    opacity: 0;
     overflow: hidden;
     transform: translateX(calc(-1 * #{var(--volume-width) / 2}));
-    opacity: 0;
-    width: 0;
-    height: 100%;
     transition: transform 0.2s ease-out, opacity 0.2s ease-in;
+    width: 0;
   }
 
-  &:hover &__level-container {
-    position: relative;
-    opacity: 1;
+  &:hover &__level-container,
+  &__level-container:hover {
     height: 100%;
-    width: var(--volume-width);
+    opacity: 1;
+    position: relative;
     transform: translateX(0);
     transition: transform 0.2s ease-out, opacity 0.2s ease-in;
+    width: var(--volume-width);
   }
 
   &__level {
     & {
-      cursor: pointer;
-      pointer-events: all;
       background-color: var(--volume-color);
+      cursor: pointer;
       opacity: 0.7;
+      pointer-events: all;
     }
 
     &,
     &-progress {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      transform: translateY(-50%);
-
       border: 0 solid transparent;
       border-radius: var(--volume-border-radius);
+      bottom: 0;
       height: var(--volume-height);
+      left: 0;
+      position: absolute;
+
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     &-progress {
-      pointer-events: none;
-      width: 0;
       background-color: var(--volume-progress-color);
-
+      pointer-events: none;
       resize: horizontal;
+
+      width: 0;
     }
 
     &-circle {
+      background-color: var(--volume-progress-color);
+      border-radius: 50%;
+      height: 10px;
       position: absolute;
-      top: 50%;
       right: 0;
+      top: 50%;
       transform: translateY(-50%);
       width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: var(--volume-progress-color);
     }
   }
 

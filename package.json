@@ -2,16 +2,6 @@
   "name": "longplyr",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
-  "files": ["dist"],
-  "main": "./dist/longplyr.umd.js",
-  "module": "./dist/longplyr.es.js",
-  "exports": {
-    ".": {
-      "import": "./dist/longplyr.es.js",
-      "require": "./dist/longplyr.umd.js"
-    }
-  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --dest dist/ --name longplyr src/main.ts",

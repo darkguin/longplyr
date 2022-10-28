@@ -1,35 +1,45 @@
-import { Player, useModule } from "@/core";
-import { Ref, ref } from "vue";
-import { Events } from "@/core/values";
-import { useEventListener } from "@vueuse/core";
+import { useModule } from "@/utils";
+import { reactive, Ref } from "vue";
+import { useReactivity } from "./compasable/useReactivity";
+import { Events } from "@/modules/events-emmiter";
 
-export const Reactivity = useModule((player: Player) => {
-  const duration = ref<number>(player.$el.duration || 0);
-  const currentTime = ref<number>(player.$el.currentTime || 0);
-  const volume = ref<number>(player.$el.volume || 0);
+export const Reactivity = useModule(({ player, onModuleDispose }) => {
+  const { createReactive, cleanupListenerFns } = useReactivity(player);
+
+  const currentTime = createReactive<number>("currentTime", [Events.TimeUpdate]);
+  const duration = createReactive<number>("duration", [Events.DurationChange]);
+  const ended = createReactive<boolean>("ended", [Events.Ended]);
+
+  const volume = createReactive<number>("volume", [Events.VolumeChange]);
+  const muted = createReactive<boolean>("muted", [Events.VolumeChange]);
+
+  const paused = createReactive<boolean>("paused", [Events.Pause, Events.Playing]);
+  const played = createReactive<boolean>("played", [Events.Pause, Events.Playing]);
 
   player.reactive = {
+    media: reactive(player.$el),
     currentTime,
     duration,
     volume,
+    muted,
+    paused,
+    played,
+    ended,
   };
 
-  useEventListener(player.$el, Events.TimeUpdate, () => {
-    currentTime.value = player.$el.currentTime;
-  });
-  useEventListener(player.$el, Events.DurationChange, () => {
-    duration.value = player.$el.duration;
-  });
-  useEventListener(player.$el, Events.VolumeChange, () => {
-    volume.value = player.$el.volume;
-  });
+  onModuleDispose(() => cleanupListenerFns.forEach((removeListenerFn) => removeListenerFn()));
 });
 
 export interface Reactivity {
   reactive: {
+    media: HTMLMediaElement;
     currentTime: Ref<number>;
     duration: Ref<number>;
     volume: Ref<number>;
-    [key: string]: any;
+    muted: Ref<boolean>;
+    paused: Ref<boolean>;
+    played: Ref<boolean>;
+    ended: Ref<boolean>;
+    [key: string]: unknown;
   };
 }

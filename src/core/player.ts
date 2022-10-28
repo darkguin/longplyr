@@ -1,8 +1,9 @@
-import { PlayerModuleFunc } from "@/core/models";
+import { PlayerModule } from "@/types";
 import { EventEmitter } from "@/modules/events-emmiter";
 import { FullscreenMode } from "@/modules/fullscreen-mode/fullscreen";
 import { nanoid } from "nanoid";
 import { Reactivity } from "@/modules/reactivity";
+import { Lifecycle } from "@/modules/lifecycle";
 
 class Player {
   constructor(mediaEl: HTMLMediaElement, containerEl: HTMLElement) {
@@ -10,21 +11,21 @@ class Player {
     this.$el = mediaEl;
     this.$containerEl = containerEl;
 
-    Player.modules_.forEach((moduleFunc) => moduleFunc(this));
+    Player.modules_.forEach((module) => module.moduleFunc(this));
   }
 
-  private static modules_: PlayerModuleFunc[] = [];
+  private static modules_: PlayerModule[] = [];
   readonly id: string;
   readonly $el: HTMLMediaElement;
   readonly $containerEl: HTMLElement;
 
-  static installModule(moduleFunc: PlayerModuleFunc) {
-    if (!!moduleFunc && Player.modules_.indexOf(moduleFunc) < 0) {
-      Player.modules_.push(moduleFunc);
+  static installModule(module: PlayerModule) {
+    if (!!module && Player.modules_.indexOf(module) < 0) {
+      Player.modules_.push(module);
     }
   }
 
-  static use(modules: PlayerModuleFunc[]) {
+  static use(modules: PlayerModule[]) {
     modules.forEach((m) => Player.installModule(m));
     return Player;
   }
@@ -34,12 +35,12 @@ class Player {
   }
 }
 
-type CoreModules = EventEmitter & FullscreenMode & Reactivity;
+type CoreModules = EventEmitter & FullscreenMode & Reactivity & Lifecycle;
 
 interface Player extends CoreModules {
   [key: string]: unknown;
 }
 
-Player.use([EventEmitter, Reactivity, FullscreenMode]);
+Player.use([EventEmitter, Reactivity, FullscreenMode, Lifecycle]);
 
 export default Player;

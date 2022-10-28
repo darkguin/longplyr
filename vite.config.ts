@@ -8,9 +8,9 @@ export default defineConfig({
     lib: {
       entry: "src/main.ts",
       name: "LongPlyrLib",
+      formats: ["es", "umd", "cjs"],
       fileName: (format) => `longplyr.${format}.js`,
     },
-    target: "es2015",
   },
   resolve: {
     alias: [{ find: "@", replacement: path.resolve(__dirname, "/src") }],

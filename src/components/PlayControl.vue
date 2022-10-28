@@ -1,55 +1,42 @@
 <script lang="ts" setup>
-import { inject, onBeforeUnmount, onMounted, ref } from "vue";
+import { inject } from "vue";
 import { Player } from "@/core";
+import { useReactivity } from "@/modules/reactivity";
+
 import PlayIcon from "@/components/icons/PlayIcon.vue";
 import PauseIcon from "@/components/icons/PauseIcon.vue";
-import { Events } from "@/core/values";
 
 const player = inject("player") as Player;
-const isPlaying = ref(false);
-
-onMounted(() => {
-  player.on(Events.Playing, onPlaying);
-  player.on(Events.Pause, onPause);
-});
-
-onBeforeUnmount(() => {
-  player.off(Events.Playing, onPlaying);
-  player.off(Events.Pause, onPause);
-});
-
-const onPlaying = () => {
-  isPlaying.value = true;
-};
-
-const onPause = () => {
-  isPlaying.value = false;
-};
+const { paused, ended } = useReactivity(player);
 
 const onBtnClick = () => {
   if (!player) return;
-  player.togglePlay();
+  paused.value || ended.value ? player.$el.play() : player.$el.pause();
 };
 </script>
 
 <template>
   <div class="lpr-play" @click="onBtnClick">
     <Transition>
-      <PlayIcon v-if="!isPlaying" class="lpr-play__icon" width="32" height="32" color="#fff" />
-      <PauseIcon v-else class="lpr-play__icon" width="32" height="32" color="#fff" />
+      <PlayIcon v-if="paused" class="lpr-play__icon" color="#fff" height="32" width="32" />
+      <PauseIcon v-else class="lpr-play__icon" color="#fff" height="32" width="32" />
     </Transition>
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
+:host {
+  grid-area: play;
+}
+
 .lpr-play {
-  position: relative;
-  width: 32px;
-  height: 32px;
-  pointer-events: all;
   cursor: pointer;
   display: inline-block;
+  height: 32px;
   margin-right: 16px;
+  pointer-events: all;
+  position: relative;
+  width: 32px;
 
   &__icon {
     position: absolute;

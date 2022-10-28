@@ -1,25 +1,23 @@
 <script lang="ts" setup>
-import { computed, inject, ref } from "vue";
-import { Player, useTime } from "@/core";
-import SoundOffIcon from "@/components/icons/SoundOffIcon.vue";
-import SoundIcon from "@/components/icons/SoundIcon.vue";
+import { computed, inject } from "vue";
+import { Player } from "@/core";
 import { useReactivity } from "@/modules/reactivity";
+import { useTime } from "@/utils";
 
-const player = ref<Player>(inject("player") as Player);
+const player = inject("player") as Player;
 
-const { toHMS } = useTime();
-const currentTime = useReactivity<number>(player, "currentTime");
-const duration = useReactivity<number>(player, "duration");
+const { toHMSStrings } = useTime();
+const { currentTime, duration } = useReactivity(player);
 
 const isShort = computed(() => duration.value < 3600);
 
 const formattedTime = computed(() => {
-  const { h, m, s } = toHMS(currentTime.value);
+  const { h, m, s } = toHMSStrings(currentTime.value);
   return isShort ? `${m}:${s}` : `${h}:${m}:${s}`;
 });
 
 const formattedDuration = computed(() => {
-  const { h, m, s } = toHMS(duration.value);
+  const { h, m, s } = toHMSStrings(duration.value);
   return isShort ? `${m}:${s}` : `${h}:${m}:${s}`;
 });
 </script>
@@ -29,9 +27,13 @@ const formattedDuration = computed(() => {
 </template>
 
 <style lang="scss">
+:host {
+  grid-area: time;
+}
+
 .lpr-time {
+  color: #fff;
   font-size: 18px;
   font-weight: 500;
-  color: #fff;
 }
 </style>

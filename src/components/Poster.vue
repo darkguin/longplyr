@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineProps, inject, onMounted, ref, withDefaults } from "vue";
 import { Player } from "@/core";
-import { Events } from "@/core/values";
+import { Events } from "@/modules/events-emmiter";
 import PlayIcon from "@/components/icons/PlayIcon.vue";
 
 withDefaults(defineProps<{ src: string }>(), { src: "" });
@@ -26,9 +26,9 @@ const onClick = () => {
 <template>
   <transition>
     <div v-if="isVisible" class="lpr-poster__container" @click="onClick">
-      <img :src="src" class="lpr-poster" alt="lpr-poster" />
+      <img :src="src" alt="lpr-poster" class="lpr-poster" />
 
-      <PlayIcon width="56" height="56" color="#fff" class="lpr-poster__icon" />
+      <PlayIcon class="lpr-poster__icon" color="#fff" height="56" width="56" />
     </div>
   </transition>
 </template>
@@ -40,22 +40,22 @@ const onClick = () => {
 }
 
 .lpr-poster {
-  width: 100%;
+  filter: brightness(var(--lpr-poster-brightness));
   height: 100%;
   object-fit: cover;
-  filter: brightness(var(--lpr-poster-brightness));
+  width: 100%;
 
   &__container {
+    background: var(--lpr-poster-background);
+    cursor: pointer;
+    height: 100%;
+    left: 0;
+    pointer-events: all;
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--lpr-poster-background);
-    z-index: 2;
-    cursor: pointer;
-    pointer-events: all;
     transition: all ease-in-out 400ms;
+    width: 100%;
+    z-index: 2;
 
     &:hover {
       transform: scale(1.05);
@@ -64,13 +64,13 @@ const onClick = () => {
   }
 
   &__icon {
+    left: 50%;
+    opacity: 0.85;
     position: absolute;
     top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 3;
-    opacity: 0.85;
     transition: all ease-in-out 400ms;
+    z-index: 3;
 
     &:hover {
       opacity: 1;

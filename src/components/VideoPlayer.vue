@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineEmits, defineProps, onMounted, provide, ref, withDefaults } from "vue";
 import { Player } from "@/core";
-import { Events } from "@/core/values";
+import { Events } from "@/modules/events-emmiter";
 
 const props = withDefaults(defineProps<{ src: string }>(), { src: "" });
 const emits = defineEmits([Events.Created]);
@@ -13,9 +13,10 @@ const containerRef = ref<HTMLDivElement>();
 onMounted(() => {
   if (!mediaRef.value || !containerRef.value) return;
 
-  player.value = new Player(mediaRef.value, containerRef.value);
-  provide("player", player.value);
-  emits(Events.Created, player.value);
+  const playerInstance = new Player(mediaRef.value, containerRef.value);
+  player.value = playerInstance;
+  provide("player", playerInstance);
+  emits(Events.Created, playerInstance);
 });
 
 const onPlayerClick = () => {
@@ -25,13 +26,13 @@ const onPlayerClick = () => {
 </script>
 
 <template>
-  <div class="lpr" ref="containerRef" :class="{ 'lpr--fullscreen': player?.isFullscreen }">
+  <div ref="containerRef" :class="{ 'lpr--fullscreen': player?.isFullscreen }" class="lpr">
     <video
       :id="player && player.id"
-      :src="src"
-      v-bind="$attrs"
-      class="lpr__video"
       ref="mediaRef"
+      :src="src"
+      class="lpr__video"
+      v-bind="$attrs"
       @click="onPlayerClick"
     ></video>
 
@@ -47,30 +48,39 @@ const onPlayerClick = () => {
 }
 
 .lpr {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   border: 0 solid transparent;
   border-radius: var(--lpr-player-border-radius);
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
 
   &.lpr--fullscreen {
     border-radius: 0;
   }
 
   &__video {
-    width: 100%;
     height: 100%;
     object-fit: cover;
+    width: 100%;
   }
 
   &__container {
+    align-items: center;
+    box-sizing: border-box;
+    display: grid;
+    gap: 12px;
+    grid-template-areas: ". . . . ." "timeline timeline timeline timeline timeline" "play volume time . fullscreen";
+    grid-template-columns: auto auto auto 1fr auto;
+
+    grid-template-rows: 1fr auto auto;
+    height: 100%;
+    left: 0;
+    padding: 14px 20px;
+    pointer-events: none;
     position: absolute;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    pointer-events: none;
   }
 
   video::-webkit-media-controls-overlay-enclosure {

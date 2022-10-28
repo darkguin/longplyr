@@ -3,6 +3,7 @@ export enum Events {
   TimeUpdate = "timeupdate",
   LoadStart = "loadstart",
   Play = "play",
+  Ended = "ended",
   Pause = "pause",
   Playing = "playing",
   DurationChange = "durationchange",

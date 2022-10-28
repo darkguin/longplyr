@@ -18,24 +18,28 @@ const onBtnClick = () => {
       <FullscreenIcon
         v-if="!player?.isFullscreen"
         class="lpr-fullscreen__icon"
-        width="26"
-        height="26"
         color="#fff"
+        height="26"
+        width="26"
       />
-      <ExitFullscreenIcon v-else class="lpr-fullscreen__icon" width="26" height="26" color="#fff" />
+      <ExitFullscreenIcon v-else class="lpr-fullscreen__icon" color="#fff" height="26" width="26" />
     </Transition>
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
+:host {
+  grid-area: fullscreen;
+}
+
 .lpr-fullscreen {
-  position: relative;
-  width: 32px;
-  height: 32px;
-  pointer-events: all;
+  align-self: flex-end;
   cursor: pointer;
   display: inline-block;
-  align-self: flex-end;
+  height: 32px;
+  pointer-events: all;
+  position: relative;
+  width: 32px;
 
   &__icon {
     position: absolute;

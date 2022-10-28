@@ -1,23 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "es2015",
+    "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,
     "jsx": "preserve",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["es2015", "DOM"],
+    "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
     "baseUrl": "./",
     "declaration": true,
     "outDir": "dist",
     "paths": {
-      "@/*": ["src/*"],
-    }
+      "@/*": ["src/*"]
+    },
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }],

@@ -1,4 +1,4 @@
-import Player from "../core";
+import { Player } from "@/core";
 
 export function usePlayerExtend(prototypes: { [key: string]: any }) {
   Object.keys(prototypes).forEach((protoMethod: string) => {

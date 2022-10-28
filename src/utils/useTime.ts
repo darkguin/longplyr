@@ -11,5 +11,14 @@ export function useTime() {
     s: Math.floor((value % 3600) % 60),
   });
 
-  return { toHMS };
+  const toHMSStrings = (value: number) => {
+    const { h, m, s } = toHMS(value);
+    return {
+      h: h < 10 ? `0${h}` : `${h}`,
+      m: m < 10 ? `0${m}` : `${m}`,
+      s: s < 10 ? `0${s}` : `${s}`,
+    };
+  };
+
+  return { toHMS, toHMSStrings };
 }

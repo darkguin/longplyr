@@ -1,14 +1,17 @@
-import { Player, useModule } from "@/core";
-import { usePlayerExtend } from "@/core/utils/usePlayerExtend";
+import { usePlayerExtend } from "@/utils/usePlayerExtend";
 import { Ref, ref } from "vue";
-import { Events, FullscreenChangeEvents } from "@/core/values";
-import { useEventListener } from "@vueuse/core";
+import { Fn, useEventListener } from "@vueuse/core";
+import { Events, FullscreenChangeEvents } from "@/modules/events-emmiter";
+import { useModule } from "@/utils";
 
-export const FullscreenMode = useModule((player: Player) => {
+export const FullscreenMode = useModule(({ player, onModuleDispose }) => {
+  const cleanupFns = new Array<Fn>();
+
   FullscreenChangeEvents.forEach((event: Events) => {
-    useEventListener(player.$containerEl, event, () => {
+    const cleanup = useEventListener(player.$containerEl, event, () => {
       player.isFullscreen.value = !player.isFullscreen.value;
     });
+    cleanupFns.push(cleanup);
   });
 
   usePlayerExtend({
@@ -16,26 +19,32 @@ export const FullscreenMode = useModule((player: Player) => {
 
     toFullScreen() {
       const requestFullscreen =
-        (this.$containerEl as any).requestFullscreen ||
-        (this.$containerEl as any).mozRequestFullScreen ||
-        (this.$containerEl as any).webkitRequestFullscreen;
+        player.$containerEl.requestFullscreen ||
+        player.$containerEl.mozRequestFullScreen ||
+        player.$containerEl.webkitRequestFullscreen ||
+        player.$containerEl.msRequestFullscreen;
 
-      requestFullscreen.call(this.$containerEl);
+      requestFullscreen.call(player.$containerEl);
     },
 
     fromFullScreen() {
       const exitFullscreen =
-        (document as any).exitFullscreen ||
-        (document as any).mozCancelFullScreen ||
-        (document as any).webkitCancelFullScreen;
+        document.exitFullscreen ||
+        document.mozCancelFullScreen ||
+        document.webkitCancelFullScreen ||
+        document.msExitFullscreen;
 
       exitFullscreen.call(document);
     },
   });
+
+  onModuleDispose(() => cleanupFns.forEach((removeListenerFn) => removeListenerFn()));
 });
 
 export interface FullscreenMode {
   isFullscreen: Ref<boolean>;
+
   toFullScreen(): void;
+
   fromFullScreen(): void;
 }

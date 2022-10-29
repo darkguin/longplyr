@@ -19,65 +19,51 @@ const onTimelineClick = (event: MouseEvent) => {
   <div class="lpr-timeline__container">
     <div class="lpr-timeline" @click="onTimelineClick" />
 
-    <div :style="{ width: progress }" class="lpr-timeline__progress">
-      <div class="lpr-timeline__circle"></div>
-    </div>
+    <div :style="{ width: progress }" class="lpr-timeline__progress"></div>
   </div>
 </template>
 
 <style lang="scss">
 :host {
-  --timeline-border-radius: 8px;
-  --timeline-color: #787574;
-
   grid-area: timeline;
-  --timeline-height: 4px;
-
+  --timeline-border-radius: 12px;
+  --timeline-color: rgba(255, 255, 255, 80%);
+  --timeline-height: 6px;
   --timeline-progress-color: #00b9ae;
 }
 
 .lpr-timeline {
   &__container {
-    height: var(--timeline-height);
     position: relative;
+    display: block;
+    height: var(--timeline-height);
   }
 
   &,
   &__progress {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--timeline-height);
     border: 0 solid transparent;
     border-radius: var(--timeline-border-radius);
-    bottom: 0;
-    height: var(--timeline-height);
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
   }
 
   & {
-    background-color: var(--timeline-color);
     cursor: pointer;
-    opacity: 0.7;
     pointer-events: all;
+    opacity: 0.7;
+    background-color: var(--timeline-color);
   }
 
   &__progress {
-    background-color: var(--timeline-progress-color);
     overflow: visible;
-    pointer-events: none;
-    resize: horizontal;
     width: 0;
-  }
-
-  &__circle {
+    resize: horizontal;
+    pointer-events: none;
     background-color: var(--timeline-progress-color);
-    border-radius: 50%;
-    height: 10px;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 10px;
   }
 }
 </style>

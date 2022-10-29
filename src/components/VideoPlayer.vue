@@ -45,42 +45,55 @@ const onPlayerClick = () => {
 <style lang="scss">
 :host {
   --lpr-player-border-radius: 16px;
+  --lpr-player-padding: min(3.33%, 32px);
+}
+
+* {
+  font-size: 0;
+  box-sizing: border-box;
 }
 
 .lpr {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   border: 0 solid transparent;
   border-radius: var(--lpr-player-border-radius);
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
 
   &.lpr--fullscreen {
     border-radius: 0;
   }
 
   &__video {
-    height: 100%;
-    object-fit: cover;
+    font-size: 0;
     width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    object-fit: cover;
   }
 
   &__container {
-    align-items: center;
-    box-sizing: border-box;
-    display: grid;
-    gap: 12px;
-    grid-template-areas: ". . . . ." "timeline timeline timeline timeline timeline" "play volume time . fullscreen";
-    grid-template-columns: auto auto auto 1fr auto;
-
-    grid-template-rows: 1fr auto auto;
-    height: 100%;
-    left: 0;
-    padding: 14px 20px;
-    pointer-events: none;
     position: absolute;
     top: 0;
-    width: 100%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+
+    align-items: center;
+    box-sizing: border-box;
+
+    padding: var(--lpr-player-padding);
+    pointer-events: none;
+    gap: 14px;
+    grid-template-areas: ". . . . ." "play volume time . fullscreen" "timeline timeline timeline timeline timeline";
+    grid-template-columns: auto auto auto 1fr auto;
+    grid-template-rows: 1fr auto auto;
   }
 
   video::-webkit-media-controls-overlay-enclosure {

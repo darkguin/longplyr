@@ -19,10 +19,16 @@ const onBtnClick = () => {
         v-if="!player?.isFullscreen"
         class="lpr-fullscreen__icon"
         color="#fff"
-        height="26"
-        width="26"
+        height="22px"
+        width="22px"
       />
-      <ExitFullscreenIcon v-else class="lpr-fullscreen__icon" color="#fff" height="26" width="26" />
+      <ExitFullscreenIcon
+        v-else
+        class="lpr-fullscreen__icon"
+        color="#fff"
+        height="22px"
+        width="22px"
+      />
     </Transition>
   </div>
 </template>
@@ -33,21 +39,21 @@ const onBtnClick = () => {
 }
 
 .lpr-fullscreen {
-  align-self: flex-end;
-  cursor: pointer;
-  display: inline-block;
-  height: 32px;
-  pointer-events: all;
   position: relative;
-  width: 32px;
+  display: inline-block;
+  align-self: flex-end;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  pointer-events: all;
 
   &__icon {
     position: absolute;
     transition: all 0.25s ease-in;
 
     &:hover {
-      transform: scale(1.2);
       transition: all 0.25s ease-in;
+      transform: scale(1.2);
     }
   }
 }
@@ -58,12 +64,12 @@ const onBtnClick = () => {
 }
 
 .v-enter-from {
-  opacity: 0;
   transform: scale(0);
+  opacity: 0;
 }
 
 .v-leave-to {
-  opacity: 0;
   transform: scale(1);
+  opacity: 0;
 }
 </style>

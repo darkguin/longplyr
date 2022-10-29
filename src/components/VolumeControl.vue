@@ -28,111 +28,96 @@ const onProgressClick = (event: MouseEvent) => {
   <div class="lpr-volume">
     <div class="lpr-volume__button" @click="onToggleMute">
       <Transition>
-        <SoundIcon v-if="!muted" class="lpr-volume__icon" color="#fff" height="26" width="26" />
-        <SoundOffIcon v-else class="lpr-volume__icon" color="#fff" height="28" width="28" />
+        <SoundIcon v-if="!muted" class="lpr-volume__icon" color="#fff" height="22" width="22" />
+        <SoundOffIcon v-else class="lpr-volume__icon" color="#fff" height="22" width="22" />
       </Transition>
     </div>
 
     <div class="lpr-volume__level-container" @click="onProgressClick">
       <div class="lpr-volume__level" />
-
-      <div :style="{ width: progress }" class="lpr-volume__level-progress">
-        <div class="lpr-volume__level-circle"></div>
-      </div>
+      <div :style="{ width: progress }" class="lpr-volume__level-progress" />
     </div>
   </div>
 </template>
 
 <style lang="scss">
 :host {
-  --volume-border-radius: 8px;
-  --volume-color: #787574;
+  --volume-border-radius: 12px;
+  --volume-color: rgba(255, 255, 255, 80%);
 
   grid-area: volume;
-  --volume-height: 4px;
+  --volume-height: 6px;
   --volume-progress-color: #00b9ae;
 
   --volume-width: 80px;
 }
 
 .lpr-volume {
-  align-items: center;
-  display: flex;
-  height: 32px;
   position: relative;
+  display: flex;
+  align-items: center;
   width: fit-content;
+  height: 22px;
 
   &__button,
   &__level-container {
+    display: flex;
     align-items: center;
     cursor: pointer;
-    display: flex;
     pointer-events: all;
   }
 
   &__button {
+    width: 22px;
     height: 100%;
-    width: 32px;
   }
 
   &__level-container {
-    height: 100%;
-    opacity: 0;
     overflow: hidden;
-    transform: translateX(calc(-1 * #{var(--volume-width) / 2}));
-    transition: transform 0.2s ease-out, opacity 0.2s ease-in;
     width: 0;
+    height: 100%;
+    transition: all 1s ease-out;
+    transform: scale(0);
+    opacity: 0;
   }
 
   &:hover &__level-container,
   &__level-container:hover {
-    height: 100%;
-    opacity: 1;
     position: relative;
-    transform: translateX(0);
-    transition: transform 0.2s ease-out, opacity 0.2s ease-in;
     width: var(--volume-width);
+    height: 100%;
+    transition: all 300ms ease-out;
+    transform: scale(1);
+    opacity: 1;
   }
 
   &__level {
     & {
-      background-color: var(--volume-color);
       cursor: pointer;
-      opacity: 0.7;
       pointer-events: all;
+      opacity: 0.7;
+      background-color: var(--volume-color);
     }
 
     &,
     &-progress {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: var(--volume-height);
+      margin-left: 7px;
+      transform: translateY(-50%);
       border: 0 solid transparent;
       border-radius: var(--volume-border-radius);
-      bottom: 0;
-      height: var(--volume-height);
-      left: 0;
-      position: absolute;
-
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
     }
 
     &-progress {
-      background-color: var(--volume-progress-color);
-      pointer-events: none;
-      resize: horizontal;
-
       width: 0;
-    }
-
-    &-circle {
+      resize: horizontal;
+      pointer-events: none;
       background-color: var(--volume-progress-color);
-      border-radius: 50%;
-      height: 10px;
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 10px;
     }
   }
 
@@ -147,12 +132,12 @@ const onProgressClick = (event: MouseEvent) => {
 }
 
 .v-enter-from {
-  opacity: 0;
   transform: translateY(-30px);
+  opacity: 0;
 }
 
 .v-leave-to {
-  opacity: 0;
   transform: translateY(30px);
+  opacity: 0;
 }
 </style>

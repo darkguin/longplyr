@@ -18,8 +18,8 @@ const onBtnClick = () => {
 <template>
   <div class="lpr-play" @click="onBtnClick">
     <Transition>
-      <PlayIcon v-if="paused" class="lpr-play__icon" color="#fff" height="32" width="32" />
-      <PauseIcon v-else class="lpr-play__icon" color="#fff" height="32" width="32" />
+      <PlayIcon v-if="paused" class="lpr-play__icon" color="#fff" height="22" width="22" />
+      <PauseIcon v-else class="lpr-play__icon" color="#fff" height="22" width="22" />
     </Transition>
   </div>
 </template>
@@ -30,13 +30,12 @@ const onBtnClick = () => {
 }
 
 .lpr-play {
-  cursor: pointer;
-  display: inline-block;
-  height: 32px;
-  margin-right: 16px;
-  pointer-events: all;
   position: relative;
-  width: 32px;
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  pointer-events: all;
 
   &__icon {
     position: absolute;
@@ -49,12 +48,12 @@ const onBtnClick = () => {
 }
 
 .v-enter-from {
-  opacity: 0;
   transform: translateY(-30px);
+  opacity: 0;
 }
 
 .v-leave-to {
-  opacity: 0;
   transform: translateY(30px);
+  opacity: 0;
 }
 </style>

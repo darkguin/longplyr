@@ -1,3 +1,3 @@
-import { Lifecycle } from "./lifecycle";
+import { Lifecycle, onBeforeDisposed, onCreated } from "./lifecycle";
 
-export { Lifecycle };
+export { Lifecycle, onCreated, onBeforeDisposed };

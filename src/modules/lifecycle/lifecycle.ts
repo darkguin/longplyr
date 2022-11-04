@@ -1,19 +1,24 @@
 import { usePlayerExtend } from "@/utils/usePlayerExtend";
 import { useModule } from "@/utils";
+import { HookFn, HookStore } from "@/modules/lifecycle/hook-store";
 import { Player } from "@/core";
 
 enum LifeCycleHook {
-  MOUNTED = "mounted",
-  UNMOUNTED = "unmounted",
+  CREATED = "created",
+  BEFORE_DISPOSED = "beforeDisposed",
 }
 
-type LifeCycleHookFn = (player: Player) => void;
+const createLifecycleHook = (name: LifeCycleHook) => {
+  return (player: Player, hook: HookFn) => {
+    player._hooks[name].dispatch(hook);
+  };
+};
 
 export const Lifecycle = useModule(({ player }) => {
-  const hooks = {} as Record<LifeCycleHook, LifeCycleHookFn[]>;
+  const hooks = {} as Record<LifeCycleHook, HookStore<LifeCycleHook>>;
 
   Object.values(LifeCycleHook).forEach((key: LifeCycleHook) => {
-    hooks[key] = [];
+    hooks[key] = new HookStore<typeof key>(player);
   });
 
   usePlayerExtend({
@@ -22,5 +27,8 @@ export const Lifecycle = useModule(({ player }) => {
 });
 
 export interface Lifecycle {
-  readonly _hooks: Record<LifeCycleHook, LifeCycleHookFn[]>;
+  readonly _hooks: Record<LifeCycleHook, HookStore<LifeCycleHook>>;
 }
+
+export const onCreated = createLifecycleHook(LifeCycleHook.CREATED);
+export const onBeforeDisposed = createLifecycleHook(LifeCycleHook.BEFORE_DISPOSED);

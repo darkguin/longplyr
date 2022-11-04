@@ -81,9 +81,15 @@ const onProgressClick = (event: MouseEvent) => {
     opacity: 0;
   }
 
+  &:hover &__button {
+    box-sizing: content-box;
+    padding-right: 7px;
+  }
+
   &:hover &__level-container,
   &__level-container:hover {
     position: relative;
+    box-sizing: content-box;
     width: var(--volume-width);
     height: 100%;
     transition: all 300ms ease-out;
@@ -106,16 +112,16 @@ const onProgressClick = (event: MouseEvent) => {
       right: 0;
       bottom: 0;
       left: 0;
+      overflow: hidden;
       height: var(--volume-height);
-      margin-left: 7px;
       transform: translateY(-50%);
       border: 0 solid transparent;
       border-radius: var(--volume-border-radius);
     }
 
     &-progress {
+      box-sizing: content-box;
       width: 0;
-      resize: horizontal;
       pointer-events: none;
       background-color: var(--volume-progress-color);
     }

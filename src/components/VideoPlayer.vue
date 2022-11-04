@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineEmits, defineProps, onMounted, provide, ref, withDefaults } from "vue";
+import { defineEmits, defineProps, onMounted, onUnmounted, provide, ref, withDefaults } from "vue";
 import { Player } from "@/core";
 import { Events } from "@/modules/events-emmiter";
 
@@ -17,6 +17,10 @@ onMounted(() => {
   player.value = playerInstance;
   provide("player", playerInstance);
   emits(Events.Created, playerInstance);
+});
+
+onUnmounted(() => {
+  player.value?.dispose();
 });
 
 const onPlayerClick = () => {

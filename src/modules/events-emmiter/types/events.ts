@@ -11,6 +11,7 @@ export enum Events {
   FullscreenChange = "fullscreenchange",
   MozFullscreenChange = "mozfullscreenchange",
   WebKitFullscreenChange = "webkitfullscreenchange",
+  MouseMove = "mousemove",
 }
 
 export const FullscreenChangeEvents = [

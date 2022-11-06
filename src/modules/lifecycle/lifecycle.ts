@@ -28,6 +28,14 @@ export const Lifecycle = useModule(({ player }) => {
         hook(player);
       });
     },
+    _clearHook(name: LifecycleHook) {
+      hooks[name].hooks.clear();
+    },
+    _clearHooks: () => {
+      Object.values(LifecycleHook).forEach((name: LifecycleHook) => {
+        hooks[name].hooks.clear();
+      });
+    },
   });
 });
 
@@ -35,6 +43,10 @@ export interface Lifecycle {
   readonly _hooks: Record<LifecycleHook, HookStore<LifecycleHook>>;
 
   _triggerHook(name: LifecycleHook): void;
+
+  _clearHook(name: LifecycleHook): void;
+
+  _clearHooks(): void;
 }
 
 export const onCreated = createLifecycleHook(LifecycleHook.CREATED);

@@ -1,9 +1,9 @@
 import { PlayerModule } from "@/types";
 import { EventEmitter } from "@/modules/events-emmiter";
 import { FullscreenMode } from "@/modules/fullscreen-mode/fullscreen";
-import { nanoid } from "nanoid";
 import { Reactivity } from "@/modules/reactivity";
 import { Lifecycle, LifecycleHook } from "@/modules/lifecycle";
+import { createUUID } from "@/utils";
 
 class Player {
   private static modules_: PlayerModule[] = [];
@@ -12,7 +12,7 @@ class Player {
   readonly $containerEl: HTMLElement;
 
   constructor(mediaEl: HTMLMediaElement, containerEl: HTMLElement) {
-    this.id = `player-${nanoid(10)}`;
+    this.id = createUUID("player");
     this.$el = mediaEl;
     this.$containerEl = containerEl;
 
@@ -35,6 +35,7 @@ class Player {
   dispose() {
     Player.modules_.forEach((module) => module.dispose());
     this._triggerHook(LifecycleHook.BEFORE_DISPOSED);
+    this._clearHooks();
   }
 
   togglePlay() {

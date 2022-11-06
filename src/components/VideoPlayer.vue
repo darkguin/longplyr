@@ -1,7 +1,17 @@
 <script lang="ts" setup>
-import { defineEmits, defineProps, onMounted, onUnmounted, provide, ref, withDefaults } from "vue";
+import {
+  defineEmits,
+  defineProps,
+  onMounted,
+  onUnmounted,
+  provide,
+  ref,
+  watch,
+  withDefaults,
+} from "vue";
 import { Player } from "@/core";
 import { Events } from "@/modules/events-emmiter";
+import { useControlVisibility } from "@/utils";
 
 const props = withDefaults(defineProps<{ src: string }>(), { src: "" });
 const emits = defineEmits([Events.Created]);
@@ -9,6 +19,7 @@ const emits = defineEmits([Events.Created]);
 const player = ref<Player>();
 const mediaRef = ref<HTMLVideoElement>();
 const containerRef = ref<HTMLDivElement>();
+const isControlBarVisible = ref<boolean>(true);
 
 onMounted(() => {
   if (!mediaRef.value || !containerRef.value) return;
@@ -17,6 +28,11 @@ onMounted(() => {
   player.value = playerInstance;
   provide("player", playerInstance);
   emits(Events.Created, playerInstance);
+
+  const { isControlVisible } = useControlVisibility(playerInstance);
+  watch(isControlVisible, (value) => {
+    isControlBarVisible.value = value;
+  });
 });
 
 onUnmounted(() => {
@@ -40,9 +56,11 @@ const onPlayerClick = () => {
       @click="onPlayerClick"
     ></video>
 
-    <div class="lpr__container">
-      <slot />
-    </div>
+    <Transition>
+      <div v-show="isControlBarVisible" class="lpr__container">
+        <slot />
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -70,6 +88,10 @@ const onPlayerClick = () => {
 
   &.lpr--fullscreen {
     border-radius: 0;
+
+    .lpr__video {
+      object-fit: contain;
+    }
   }
 
   &__video {
@@ -111,5 +133,22 @@ const onPlayerClick = () => {
   video::-webkit-media-controls {
     display: none !important;
   }
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 400ms ease-out;
+}
+
+.v-enter-from {
+  transition-delay: 2s;
+  transform: translateY(50px);
+  opacity: 0;
+}
+
+.v-leave-to {
+  transition-delay: 2s;
+  transform: translateY(50px);
+  opacity: 0;
 }
 </style>

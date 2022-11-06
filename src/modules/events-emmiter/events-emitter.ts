@@ -1,46 +1,60 @@
 import { usePlayerExtend } from "@/utils/usePlayerExtend";
 import { useModule } from "@/utils";
+import { Fn, useEventListener } from "@vueuse/core";
 
 export type EventMap = HTMLMediaElementEventMap;
+export type Event = keyof EventMap | Array<keyof EventMap>;
+export type EventListener = (ev: EventMap[keyof EventMap]) => void;
 
 export const EventEmitter = useModule(({ player }) => {
+  const eventCleanups = new Map<EventListener, Fn>();
+
   usePlayerExtend({
-    on<E extends keyof EventMap>(event: E | E[], listener: (ev: EventMap[E]) => any) {
+    on(event: Event, listener: EventListener) {
       if (!Array.isArray(event)) {
         event = [event];
       }
-      event.forEach((e) => player.$el.addEventListener(e, listener));
+
+      event.forEach((e) => {
+        eventCleanups.set(listener, useEventListener(player.$el, e, listener));
+      });
       return player;
     },
 
-    once<E extends keyof EventMap>(event: E, listener: (ev: EventMap[E]) => any) {
-      const onceListener = (ev: EventMap[E]) => {
+    once(event: Event, listener: EventListener) {
+      const onceListener = (ev: EventMap[keyof EventMap]) => {
         player.off(event, onceListener);
         return listener(ev);
       };
       return player.on(event, onceListener);
     },
 
-    off<E extends keyof EventMap>(event: E | E[], listener: (ev: EventMap[E]) => any) {
+    off(event: Event, listener: EventListener) {
       if (!Array.isArray(event)) {
         event = [event];
       }
-      event.forEach((e) => player.$el.removeEventListener(e, listener));
+
+      event.forEach(() => {
+        eventCleanups.get(listener)?.();
+        eventCleanups.delete(listener);
+        // player.$el.removeEventListener(e, listener);
+      });
       return player;
+    },
+
+    offAll() {
+      eventCleanups.forEach((fn) => fn());
+      eventCleanups.clear();
     },
   });
 });
 
 export interface EventEmitter {
-  on<E extends keyof EventMap>(
-    event: string | string[] | E | E[],
-    listener: (ev: EventMap[E]) => any,
-  ): this;
+  on(event: Event, listener: EventListener): this;
 
-  once<E extends keyof EventMap>(event: string | E, listener: (ev: EventMap[E]) => any): this;
+  once(event: Event, listener: EventListener): this;
 
-  off<E extends keyof EventMap>(
-    event: string | string[] | E | [],
-    listener: (ev: EventMap[E]) => any,
-  ): this;
+  off(event: Event, listener: EventListener): this;
+
+  offAll(): this;
 }

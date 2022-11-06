@@ -9,18 +9,18 @@ export function useReactivity(player: Player) {
   const cleanupListenerFns = new Array<Fn>();
 
   const createReactive = <T>(property: MediaProp, events: Events[]) => {
-    const media = reactive(player.$el);
+    const $mediaEl = reactive(player.$el);
 
     return customRef<T>((track, trigger) => {
-      let reactiveProperty = media[property];
+      let reactiveProperty = $mediaEl[property];
 
       const listenerFn = () => {
-        reactiveProperty = media[property];
+        reactiveProperty = $mediaEl[property];
         trigger();
       };
 
       events.forEach((event) => {
-        cleanupListenerFns.push(useEventListener(media, event, listenerFn));
+        cleanupListenerFns.push(useEventListener($mediaEl, event, listenerFn));
       });
 
       return {
@@ -30,7 +30,7 @@ export function useReactivity(player: Player) {
         },
         set(newValue: T) {
           // @ts-ignore
-          media[property] = newValue;
+          $mediaEl[property] = newValue;
         },
       };
     });

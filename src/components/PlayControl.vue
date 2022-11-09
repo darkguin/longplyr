@@ -7,12 +7,9 @@ import PlayIcon from "@/components/icons/PlayIcon.vue";
 import PauseIcon from "@/components/icons/PauseIcon.vue";
 
 const player = inject("player") as Player;
-const { paused, ended } = useReactivity(player);
+const { paused } = useReactivity(player);
 
-const onBtnClick = () => {
-  if (!player) return;
-  paused.value || ended.value ? player.$el.play() : player.$el.pause();
-};
+const onBtnClick = () => player?.togglePlay();
 </script>
 
 <template>

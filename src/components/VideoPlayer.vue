@@ -100,7 +100,8 @@ const onPlayerClick = () => {
     height: 100%;
     margin: 0;
     padding: 0;
-    object-fit: cover;
+    //object-fit: cover;
+    object-fit: contain;
   }
 
   &__container {

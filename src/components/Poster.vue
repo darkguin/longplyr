@@ -18,8 +18,7 @@ const onChangeVisibility = (value = !isVisible.value) => {
 };
 
 const onClick = () => {
-  if (!player) return;
-  player.$el.play();
+  player?.$el.play();
 };
 </script>
 
@@ -40,41 +39,41 @@ const onClick = () => {
 }
 
 .lpr-poster {
-  filter: brightness(var(--lpr-poster-brightness));
-  height: 100%;
-  object-fit: cover;
   width: 100%;
+  height: 100%;
+  filter: brightness(var(--lpr-poster-brightness));
+  object-fit: cover;
 
   &__container {
-    background: var(--lpr-poster-background);
-    cursor: pointer;
-    height: 100%;
-    left: 0;
-    pointer-events: all;
     position: absolute;
-    top: 0;
-    transition: all ease-in-out 400ms;
-    width: 100%;
     z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transition: all ease-in-out 400ms;
+    pointer-events: all;
+    background: var(--lpr-poster-background);
 
     &:hover {
-      transform: scale(1.05);
       transition: all ease-in-out 400ms;
+      transform: scale(1.05);
     }
   }
 
   &__icon {
-    left: 50%;
-    opacity: 0.85;
     position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    transition: all ease-in-out 400ms;
     z-index: 3;
+    top: 50%;
+    left: 50%;
+    transition: all ease-in-out 400ms;
+    transform: translate(-50%, -50%);
+    opacity: 0.85;
 
     &:hover {
-      opacity: 1;
       transition: all ease-in-out 400ms;
+      opacity: 1;
     }
   }
 }
